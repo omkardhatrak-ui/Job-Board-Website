@@ -3,7 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <title>JobFinder</title>
-    <link rel="stylesheet" href="style.css">
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            background: #ffffff;
+        }
+
+        .logo {
+            color: #1e6fd9;
+        }
+
+        .nav-links a {
+            margin: 0 8px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .btn {
+            background: #1e6fd9;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+        }
+
+        /* Hero section */
+        .hero {
+            background: #1e6fd9;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .search-box {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .search-box input {
+            padding: 8px;
+            width: 200px;
+        }
+
+        /* Content sections */
+        .container {
+            padding: 30px 40px;
+        }
+
+        .section-title {
+            margin-bottom: 15px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 15px;
+            border: 1px solid #ddd;
+        }
+
+        .card img {
+            width: 100%;
+        }
+
+        /* Footer */
+        .footer {
+            background: #0f1b2d;
+            color: white;
+            padding: 20px 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .footer a {
+            color: #ccc;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding: 10px;
+            background: #091220;
+            color: #ccc;
+            font-size: 13px;
+        }
+    </style>
 </head>
 <body>
 
@@ -97,7 +203,7 @@
 
     <div class="cards">
         <div class="card">
-            <img src="images/resume_img.jpg" alt="resume  img">
+            <img src="images/resume_img.webp" alt="resume  img">
             <h4>Resume Writing Tips</h4>
             <p>Learn how to create a strong resume.</p>
         </div>
@@ -109,7 +215,7 @@
         </div>
 
         <div class="card">
-            <img src="images/networking_img.jpg" alt="network  img">
+            <img src="images/network_img.jpg" alt="network  img">
             <h4>Networking Strategies</h4>
             <p>Grow your professional network.</p>
         </div>
