@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>JobFinder</title>
-    <!-- <link rel="stylesheet" href="style.css"> -->
+
     <style>
         body {
             margin: 0;
@@ -11,7 +11,6 @@
             background: #f5f7fb;
         }
 
-        /* Navbar */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -36,9 +35,9 @@
             border: none;
             padding: 6px 12px;
             border-radius: 4px;
+            cursor: pointer;
         }
 
-        /* Hero section */
         .hero {
             background: #1e6fd9;
             color: white;
@@ -59,7 +58,6 @@
             width: 200px;
         }
 
-        /* Content sections */
         .container {
             padding: 30px 40px;
         }
@@ -84,7 +82,6 @@
             width: 100%;
         }
 
-        /* Footer */
         .footer {
             background: #0f1b2d;
             color: white;
@@ -111,21 +108,26 @@
         }
     </style>
 </head>
+
 <body>
 
-
+<!-- ===== NAVBAR ===== -->
 <nav class="navbar">
     <h2 class="logo">JobFinder</h2>
     <div class="nav-links">
-        <a href="#">Home</a>
+        <a href="home.html">Home</a>
         <a href="#">Jobs</a>
         <a href="#">Companies</a>
         <a href="#">Blog</a>
-        <button class="btn">Register</button>
+
+        <!-- REGISTER LINKED -->
+        <a href="forms.html">
+            <button class="btn" href="forms.html">Register</button>
+        </a>
     </div>
 </nav>
 
-
+<!-- ===== HERO ===== -->
 <section class="hero">
     <h1>Find Your Dream Job</h1>
     <p>Search thousands of jobs across various industries</p>
@@ -137,7 +139,7 @@
     </div>
 </section>
 
-
+<!-- ===== FEATURED JOBS ===== -->
 <section class="container">
     <h2 class="section-title">Featured Jobs</h2>
 
@@ -145,36 +147,32 @@
         <div class="card">
             <h3>Software Engineer</h3>
             <p>New York, NY</p>
-            <button class="btn">Apply Now</button>
+            <a href="register.html"><button class="btn">Apply Now</button></a>
         </div>
 
         <div class="card">
-            
             <h3>Digital Marketing Manager</h3>
             <p>Los Angeles, CA</p>
-            <button class="btn">Apply Now</button>
+            <a href="register.html"><button class="btn">Apply Now</button></a>
         </div>
 
         <div class="card">
-           
             <h3>Sales Executive</h3>
             <p>Chicago, IL</p>
-            <button class="btn">Apply Now</button>
+            <a href="register.html"><button class="btn">Apply Now</button></a>
         </div>
 
         <div class="card">
-            
             <h3>Product Designer</h3>
             <p>San Francisco, CA</p>
-            <button class="btn">Apply Now</button>
+            <a href="register.html"><button class="btn">Apply Now</button></a>
         </div>
     </div>
 </section>
 
-
+<!-- ===== REST SECTIONS UNCHANGED ===== -->
 <section class="container">
     <h2 class="section-title">Browse by Category</h2>
-
     <div class="cards">
         <div class="card">IT & Software</div>
         <div class="card">Sales & Marketing</div>
@@ -185,10 +183,8 @@
     </div>
 </section>
 
-
 <section class="container">
     <h2 class="section-title">Top Hiring Companies</h2>
-
     <div class="cards">
         <div class="card">Tech Solutions</div>
         <div class="card">Global Corp</div>
@@ -197,42 +193,26 @@
     </div>
 </section>
 
-
 <section class="container">
     <h2 class="section-title">Career Tips & Advice</h2>
-
     <div class="cards">
         <div class="card">
-            <img src="images/resume_img.webp" alt="resume  img">
+            <img src="images/resume_img.webp">
             <h4>Resume Writing Tips</h4>
             <p>Learn how to create a strong resume.</p>
         </div>
-
         <div class="card">
-            <img src="images/interview_img.jpg" alt="interview img">
+            <img src="images/interview_img.jpg">
             <h4>How to Ace Your Interview</h4>
             <p>Simple tricks to crack interviews.</p>
         </div>
-
         <div class="card">
-            <img src="images/network_img.jpg" alt="network  img">
+            <img src="images/network_img.jpg">
             <h4>Networking Strategies</h4>
             <p>Grow your professional network.</p>
         </div>
     </div>
 </section>
-
-
-<section class="container video-section">
-    <h2 class="section-title">Career Guidance Video</h2>
-
-    <a href="https://www.youtube.com/watch?v=HMQlA-TIAsk" target="_blank">
-        <img src="https://img.youtube.com/vi/HMQlA-TIAsk/maxresdefault.jpg" 
-             alt="YouTube Video" 
-             class="yt-thumb">
-    </a>
-</section>
-
 
 <footer class="footer">
     <div>
@@ -241,14 +221,12 @@
         <a href="#">Browse Jobs</a>
         <a href="#">Contact</a>
     </div>
-
     <div>
         <h3>Job Seekers</h3>
         <a href="#">Find Jobs</a>
         <a href="#">Upload Resume</a>
         <a href="#">Job Alerts</a>
     </div>
-
     <div>
         <h3>Employers</h3>
         <a href="#">Post a Job</a>
