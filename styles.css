@@ -4,22 +4,22 @@ body {
     background: #f5f7fb;
 }
 
-/* NAVBAR */
+
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 50px;
+    padding: 15px 60px;
     background: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.logo {
+.logo h2 {
     color: #1e6fd9;
+    margin: 0;
 }
 
 .nav-links a {
-    margin: 0 10px;
+    margin: 0 8px;
     text-decoration: none;
     color: #333;
 }
@@ -28,58 +28,114 @@ body {
     background: #1e6fd9;
     color: white;
     border: none;
-    padding: 8px 15px;
+    padding: 8px 16px;
     border-radius: 5px;
     cursor: pointer;
 }
 
-/* HERO */
+.btn.small {
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+
 .hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background: linear-gradient(to right, #1e6fd9, #4a90e2);
     color: white;
     padding: 60px;
+}
+
+.hero-content {
+    max-width: 600px;
+}
+
+.hero-content h1 {
+    font-size: 40px;
 }
 
 .search-box {
     margin-top: 20px;
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 .search-box input {
     padding: 10px;
+    width: 200px;
     border-radius: 5px;
     border: none;
-    width: 200px;
 }
 
-/* SECTIONS */
+.popular {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+
 .container {
-    padding: 40px 60px;
+    padding: 50px 60px;
+}
+
+.container.light {
+    background: #f9fafc;
 }
 
 .section-title {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
+
 
 .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
     gap: 20px;
 }
 
 .card {
     background: white;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 8px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-/* FOOTER */
+.card img {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.job-footer {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.tag {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.full {
+    background: #e6f4ea;
+    color: #2e7d32;
+}
+
+.part {
+    background: #fff3e0;
+    color: #ef6c00;
+}
+
+
 .footer {
     background: #0f1b2d;
     color: white;
-    padding: 30px 60px;
+    padding: 40px 60px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
@@ -88,13 +144,16 @@ body {
 .footer a {
     color: #ccc;
     text-decoration: none;
-    margin-top: 5px;
     display: block;
+    margin-top: 6px;
+    font-size: 14px;
 }
+
 
 .copyright {
     text-align: center;
     padding: 15px;
     background: #091220;
     color: #ccc;
+    font-size: 14px;
 }
