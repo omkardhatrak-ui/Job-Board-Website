@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register | JobFinder</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eef2f9;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #1e63d5;
+        }
+
+        .nav-links a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .nav-links .register-btn {
+            background: #1e63d5;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 4px;
+        }
+
+        /* ===== FORM SECTION ===== */
+        .form-container {
+            max-width: 700px;
+            background: white;
+            margin: 40px auto;
+            padding: 30px;
+            border-radius: 6px;
+        }
+
+        .form-container h1 {
+            text-align: center;
+            color: #1e63d5;
+        }
+
+        .form-container p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        textarea {
+            resize: none;
+            height: 120px;
+        }
+
+        small {
+            color: #666;
+            display: block;
+            margin-top: -15px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: #1e63d5;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #174fb3;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            color: #666;
+            margin-top: 40px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<div class="navbar">
+    <div class="logo">JobFinder</div>
+    <div class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Jobs</a>
+        <a href="#">Companies</a>
+        <a href="#">Login</a>
+        <a href="#" class="register-btn">Register</a>
+    </div>
+</div>
+
+<!-- ===== FORM ===== -->
+<div class="form-container">
+    <h1>Job Application Form</h1>
+    <p>Please fill out the form to apply for the job.</p>
+
+    <form>
+        <label>Full Name</label>
+        <input type="text" placeholder="Enter your full name">
+
+        <label>Email Address</label>
+        <input type="email" placeholder="Enter your email">
+
+        <label>Phone Number</label>
+        <input type="tel" placeholder="Enter your phone number">
+
+        <label>Resume</label>
+        <input type="file">
+        <small>Upload your resume (PDF, DOC, DOCX).</small>
+
+        <label>Cover Letter</label>
+        <textarea placeholder="Write your cover letter here..."></textarea>
+
+        <label>LinkedIn Profile (optional)</label>
+        <input type="url" placeholder="https://">
+
+        <button type="submit">Submit Application</button>
+    </form>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+    © 2026 JobFinder. All rights reserved.
+</footer>
+
+</body>
+</html>
