@@ -13,9 +13,27 @@ body {
     background: white;
 }
 
-.logo h2 {
-    color: #1e6fd9;
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo svg {
+    width: 46px;
+    height: 46px;
+    display: block;
+}
+
+.logo-text {
     margin: 0;
+    font-size: 20px;
+    letter-spacing: 0.6px;
+    font-weight: bold;
+    background: linear-gradient(90deg, #1e6fd9, #f39b2f);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 .nav-links a {
