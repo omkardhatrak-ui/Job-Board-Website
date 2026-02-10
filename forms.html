@@ -7,8 +7,8 @@
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #eef2f9;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e9f2ff 0%, #f6f0ff 45%, #eef7ff 100%);
         }
 
         /* ===== NAVBAR ===== */
@@ -28,9 +28,11 @@
         }
 
         .logo svg {
-            width: 42px;
-            height: 42px;
+            width: 200px;
+            height: 60px;
             display: block;
+            overflow: visible;
+            animation: logo-float 4s ease-in-out infinite;
         }
 
         .logo-text {
@@ -42,6 +44,96 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+        }
+
+        .logo .pin {
+            fill: url(#grad);
+            stroke: #ffffffaa;
+            stroke-width: 3;
+            stroke-dasharray: 300;
+            stroke-dashoffset: 300;
+            animation: logo-draw 2s ease forwards;
+            filter: drop-shadow(0 0 8px #38bdf8);
+        }
+
+        .logo .halo {
+            fill: rgba(56, 189, 248, 0.18);
+            animation: logo-halo 2.6s ease-in-out infinite;
+        }
+
+        .logo .briefcase {
+            fill: #0f172a;
+            animation: logo-bounce 2s infinite ease-in-out;
+        }
+
+        .logo .pulse {
+            fill: none;
+            stroke: #67e8f9;
+            stroke-width: 3;
+            animation: logo-pulse 1.5s infinite;
+        }
+
+        .logo .logo-text-svg {
+            font-size: 28px;
+            fill: url(#grad);
+            letter-spacing: 1px;
+            opacity: 0;
+            animation: logo-fade-in 1s forwards 1.6s;
+            filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.35));
+        }
+
+        @keyframes logo-draw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes logo-bounce {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+
+        @keyframes logo-float {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-4px);
+            }
+        }
+
+        @keyframes logo-halo {
+            0% {
+                opacity: 0.2;
+                transform: scale(0.95);
+            }
+            100% {
+                opacity: 0.45;
+                transform: scale(1.12);
+            }
+        }
+
+        @keyframes logo-pulse {
+            0% {
+                r: 18;
+                opacity: 1;
+            }
+            100% {
+                r: 30;
+                opacity: 0;
+            }
+        }
+
+        @keyframes logo-fade-in {
+            to {
+                opacity: 1;
+            }
         }
 
         .nav-links a {
@@ -59,42 +151,56 @@
 
         /* ===== FORM SECTION ===== */
         .form-container {
-            max-width: 700px;
-            background: white;
-            margin: 40px auto;
-            padding: 30px;
-            border-radius: 6px;
+            max-width: 720px;
+            background: rgba(255, 255, 255, 0.96);
+            margin: 50px auto;
+            padding: 36px;
+            border-radius: 16px;
+            box-shadow: 0 24px 70px rgba(15, 23, 42, 0.12);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            backdrop-filter: blur(6px);
         }
 
         .form-container h1 {
             text-align: center;
             color: #1e63d5;
+            margin-bottom: 6px;
+            font-size: 32px;
         }
 
         .form-container p {
             text-align: center;
             color: #666;
-            margin-bottom: 30px;
+            margin-bottom: 34px;
+            font-size: 15px;
         }
 
         label {
             font-weight: bold;
             display: block;
             margin-bottom: 5px;
+            color: #0f172a;
         }
 
         input, textarea {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 12px 14px;
+            margin-bottom: 18px;
+            border: 1px solid #cbd5f0;
+            border-radius: 10px;
             outline: none;
+            background: #fff;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         textarea {
             resize: none;
             height: 120px;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #6a9bff;
+            box-shadow: 0 0 0 3px rgba(99, 132, 255, 0.2);
         }
 
         small {
@@ -108,15 +214,18 @@
             background: #1e63d5;
             color: white;
             border: none;
-            padding: 12px;
+            padding: 12px 16px;
             width: 100%;
-            border-radius: 4px;
+            border-radius: 10px;
             font-size: 16px;
             cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
         }
 
         button:hover {
             background: #174fb3;
+            transform: translateY(-1px);
+            box-shadow: 0 12px 25px rgba(30, 99, 213, 0.25);
         }
 
         .req {
@@ -127,6 +236,18 @@
         .field.invalid {
             border-color: #c62828;
             box-shadow: 0 0 0 2px rgba(198, 40, 40, 0.15);
+        }
+
+        .error-msg {
+            color: #c62828;
+            font-size: 12px;
+            margin-top: -12px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .error-msg.show {
+            display: block;
         }
 
         .form-response {
@@ -163,54 +284,36 @@
 <!-- ===== NAVBAR ===== -->
 <div class="navbar">
     <div class="logo">
-        <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+        <svg viewBox="0 0 320 120" aria-hidden="true" focusable="false">
             <defs>
-                <radialGradient id="glassGlow" cx="50%" cy="45%" r="55%">
-                    <stop offset="0%" stop-color="#8fd2ff"/>
-                    <stop offset="60%" stop-color="#2b7de5"/>
-                    <stop offset="100%" stop-color="#0f3b8f"/>
-                </radialGradient>
-                <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stop-color="#7ee0ff"/>
-                    <stop offset="55%" stop-color="#2f8bff"/>
-                    <stop offset="100%" stop-color="#1c49c9"/>
-                </linearGradient>
-                <linearGradient id="bag" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stop-color="#ffcc62"/>
-                    <stop offset="55%" stop-color="#f59a2f"/>
-                    <stop offset="100%" stop-color="#d66d1b"/>
-                </linearGradient>
-                <linearGradient id="pin" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stop-color="#ff6b6b"/>
-                    <stop offset="100%" stop-color="#e83d5a"/>
+                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#5dd5ff"/>
+                    <stop offset="100%" stop-color="#9b7bff"/>
                 </linearGradient>
             </defs>
 
-            <circle cx="56" cy="56" r="38" fill="url(#glassGlow)"/>
-            <circle cx="56" cy="56" r="44" fill="none" stroke="url(#ring)" stroke-width="8"/>
+            <circle class="halo" cx="60" cy="50" r="26"/>
+            <circle class="pulse" cx="60" cy="50" r="18"/>
 
-            <rect x="44" y="36" width="30" height="22" rx="4" fill="url(#bag)"/>
-            <rect x="52" y="32" width="14" height="6" rx="3" fill="#ffdc8f"/>
-            <rect x="56" y="46" width="8" height="6" rx="2" fill="#fef2cf"/>
+            <path class="pin"
+                  d="M60 10
+                     C40 10, 30 30, 30 45
+                     C30 70, 60 95, 60 95
+                     C60 95, 90 70, 90 45
+                     C90 30, 80 10, 60 10Z"/>
 
-            <path d="M78 42c8 0 14 6 14 13 0 10-14 20-14 20S64 65 64 55c0-7 6-13 14-13z" fill="url(#pin)"/>
-            <circle cx="78" cy="55" r="5" fill="#ffe1e6"/>
+            <rect class="briefcase" x="50" y="38" width="20" height="14" rx="2"/>
+            <rect class="briefcase" x="56" y="34" width="8" height="4"/>
 
-            <line x1="22" y1="92" x2="42" y2="72" stroke="url(#ring)" stroke-width="10" stroke-linecap="round"/>
-            <line x1="18" y1="96" x2="40" y2="74" stroke="#0f3b8f" stroke-width="6" stroke-linecap="round"/>
-
-            <circle cx="22" cy="28" r="3" fill="#a9dcff"/>
-            <circle cx="90" cy="22" r="2.5" fill="#ffe08a"/>
-            <circle cx="94" cy="78" r="2.5" fill="#86c8ff"/>
+            <text class="logo-text-svg" x="120" y="60">JobFinder</text>
         </svg>
-        <h2 class="logo-text">JOB FINDER</h2>
     </div>
     <div class="nav-links">
-        <a href="#">Home</a>
+        <a href="home.html">Home</a>
         <a href="#">Jobs</a>
         <a href="#">Companies</a>
         <a href="login.html">Login</a>
-        <a href="#" class="register-btn">Register</a>
+        <a href="forms.html" class="register-btn">Register</a>
     </div>
 </div>
 
@@ -222,22 +325,28 @@
     <form id="application-form" novalidate>
         <label>Full Name<span class="req">*</span></label>
         <input class="field" type="text" name="full_name" placeholder="Enter your full name" required>
+        <small class="error-msg" id="error-full_name"></small>
 
         <label>Email Address<span class="req">*</span></label>
         <input class="field" type="email" name="email" placeholder="Enter your email" required>
+        <small class="error-msg" id="error-email"></small>
 
         <label>Phone Number<span class="req">*</span></label>
         <input class="field" type="tel" name="phone" placeholder="Enter your phone number" required>
+        <small class="error-msg" id="error-phone"></small>
 
         <label>Resume<span class="req">*</span></label>
         <input class="field" type="file" name="resume" accept=".pdf,.doc,.docx" required>
         <small>Upload your resume (PDF, DOC, DOCX).</small>
+        <small class="error-msg" id="error-resume"></small>
 
-        <label>Cover Letter<span class="req">*</span></label>
-        <textarea class="field" name="cover_letter" placeholder="Write your cover letter here..." required></textarea>
+        <label>Cover Letter (optional)</label>
+        <textarea class="field" name="cover_letter" placeholder="Write your cover letter here..."></textarea>
+        <small class="error-msg" id="error-cover_letter"></small>
 
         <label>LinkedIn Profile (optional)</label>
-        <input type="url" placeholder="https://">
+        <input type="url" name="linkedin" placeholder="https://">
+        <small class="error-msg" id="error-linkedin"></small>
 
         <button type="submit">Submit Application</button>
         <p id="form-response" class="form-response" aria-live="polite"></p>
@@ -254,21 +363,78 @@
     const response = document.getElementById("form-response");
 
     const requiredFields = form.querySelectorAll(".field[required]");
+    const validators = {
+        full_name: (value) => {
+            if (!value.trim()) return "Full name is required.";
+            if (value.trim().length < 3) return "Full name must be at least 3 characters.";
+            if (!/^[a-zA-Z\s.'-]+$/.test(value.trim())) return "Full name can only include letters and basic punctuation.";
+            return "";
+        },
+        email: (value) => {
+            if (!value.trim()) return "Email is required.";
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) return "Enter a valid email address.";
+            return "";
+        },
+        phone: (value) => {
+            if (!value.trim()) return "Phone number is required.";
+            const digits = value.replace(/\D/g, "");
+            if (digits.length < 10 || digits.length > 15) return "Phone number must be 10 to 15 digits.";
+            return "";
+        },
+        resume: (value, input) => {
+            if (!input.files || input.files.length === 0) return "Resume is required.";
+            const fileName = input.files[0].name.toLowerCase();
+            if (!/\.(pdf|doc|docx)$/.test(fileName)) return "Resume must be a PDF, DOC, or DOCX.";
+            return "";
+        },
+        cover_letter: (value) => {
+            if (!value.trim()) return "";
+            if (value.trim().length < 50) return "Cover letter must be at least 50 characters.";
+            return "";
+        },
+        linkedin: (value) => {
+            if (!value.trim()) return "";
+            try {
+                const url = new URL(value.trim());
+                if (!/^https?:$/.test(url.protocol)) return "LinkedIn URL must start with http or https.";
+            } catch {
+                return "Enter a valid URL.";
+            }
+            return "";
+        }
+    };
 
-    const updateFieldStyles = () => {
-        requiredFields.forEach((field) => {
-            field.classList.toggle("invalid", !field.checkValidity());
-        });
+    const setError = (name, message) => {
+        const field = form.elements[name];
+        const errorEl = document.getElementById(`error-${name}`);
+        if (!field || !errorEl) return;
+        const hasError = Boolean(message);
+        field.classList.toggle("invalid", hasError);
+        errorEl.textContent = message;
+        errorEl.classList.toggle("show", hasError);
+    };
+
+    const validateField = (name) => {
+        const field = form.elements[name];
+        if (!field) return true;
+        const validator = validators[name];
+        if (!validator) return true;
+        const message = validator(field.value, field);
+        setError(name, message);
+        return !message;
+    };
+
+    const validateAll = () => {
+        return Object.keys(validators).every((name) => validateField(name));
     };
 
     form.addEventListener("submit", (event) => {
         event.preventDefault();
         response.classList.remove("error");
 
-        if (!form.checkValidity()) {
-            response.textContent = "Please fill in all required fields.";
+        if (!validateAll()) {
+            response.textContent = "Please fix the highlighted fields.";
             response.classList.add("show", "error");
-            updateFieldStyles();
             return;
         }
 
@@ -276,13 +442,20 @@
         response.classList.add("show");
         form.reset();
         requiredFields.forEach((field) => field.classList.remove("invalid"));
+        Object.keys(validators).forEach((name) => setError(name, ""));
     });
 
     form.addEventListener("input", (event) => {
-        if (event.target.classList.contains("field")) {
-            event.target.classList.toggle("invalid", !event.target.checkValidity());
+        if (event.target.name && validators[event.target.name]) {
+            validateField(event.target.name);
         }
     });
+
+    form.addEventListener("blur", (event) => {
+        if (event.target.name && validators[event.target.name]) {
+            validateField(event.target.name);
+        }
+    }, true);
 </script>
 
 </body>
