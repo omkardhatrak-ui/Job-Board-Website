@@ -53,11 +53,11 @@
         <h1>Find Your Dream Job</h1>
         <p>Search Thousands of Jobs Across Various Industries</p>
 
-        <div class="search-box">
-            <input type="search" placeholder="Job title or keyword">
-            <input type="search" placeholder="Location">
-            <button class="btn">Search Jobs</button>
-        </div>
+        <form id="job-search-form" class="search-box">
+            <input id="keyword-input" type="search" placeholder="Job title or keyword">
+            <input id="location-input" type="search" placeholder="Location">
+            <button class="btn" type="submit">Search Jobs</button>
+        </form>
 
         <p class="popular">
             Popular Searches: Marketing, Sales, IT, Finance, Design
@@ -202,6 +202,74 @@
 <div class="copyright">
     © 2026 JobFinder. All rights reserved.
 </div>
+
+<script>
+    const searchForm = document.getElementById("job-search-form");
+    const locationInput = document.getElementById("location-input");
+    const keywordInput = document.getElementById("keyword-input");
+
+    const redirectToResults = (location, keyword, coords) => {
+        const params = new URLSearchParams();
+        if (location) {
+            params.set("location", location);
+        }
+
+        if (keyword) {
+            params.set("keyword", keyword);
+        }
+
+        if (coords) {
+            params.set("userLat", coords.latitude.toString());
+            params.set("userLng", coords.longitude.toString());
+        }
+
+        window.location.href = `jobs-map.html?${params.toString()}`;
+    };
+
+    searchForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const location = locationInput.value.trim();
+        const keyword = keywordInput.value.trim();
+        const hasLocation = Boolean(location);
+        if (!hasLocation) {
+            const useCurrentLocation = confirm("No location entered. Do you want to use your current location?");
+            if (!useCurrentLocation) {
+                locationInput.focus();
+                return;
+            }
+        }
+
+        if (!navigator.geolocation) {
+            if (hasLocation) {
+                redirectToResults(location, keyword, null);
+            } else {
+                alert("Please enter a location or enable geolocation to use your current location.");
+                locationInput.focus();
+            }
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                redirectToResults(location, keyword, position.coords);
+            },
+            () => {
+                if (hasLocation) {
+                    redirectToResults(location, keyword, null);
+                } else {
+                    alert("Location access was blocked. Please enter a location to continue.");
+                    locationInput.focus();
+                }
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 7000,
+                maximumAge: 120000
+            }
+        );
+    });
+</script>
 
 </body>
 </html>
