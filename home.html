@@ -231,20 +231,12 @@
 
         const location = locationInput.value.trim();
         const keyword = keywordInput.value.trim();
-        const hasLocation = Boolean(location);
-        if (!hasLocation) {
-            const useCurrentLocation = confirm("No location entered. Do you want to use your current location?");
-            if (!useCurrentLocation) {
-                locationInput.focus();
-                return;
-            }
-        }
 
         if (!navigator.geolocation) {
-            if (hasLocation) {
+            if (location) {
                 redirectToResults(location, keyword, null);
             } else {
-                alert("Please enter a location or enable geolocation to use your current location.");
+                alert("Geolocation is unavailable. Please type a location to search jobs.");
                 locationInput.focus();
             }
             return;
@@ -252,13 +244,19 @@
 
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                redirectToResults(location, keyword, position.coords);
+                if (location || keyword) {
+                    redirectToResults(location, keyword, position.coords);
+                } else {
+                    redirectToResults("", "", position.coords);
+                }
             },
             () => {
-                if (hasLocation) {
+                if (location) {
                     redirectToResults(location, keyword, null);
+                } else if (keyword) {
+                    redirectToResults("", keyword, null);
                 } else {
-                    alert("Location access was blocked. Please enter a location to continue.");
+                    alert("Unable to get your current location. Please enter a location manually.");
                     locationInput.focus();
                 }
             },
