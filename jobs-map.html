@@ -141,11 +141,12 @@
     const params = new URLSearchParams(window.location.search);
     const selectedLocation = (params.get("location") || "").trim();
     const keyword = (params.get("keyword") || "").trim();
+    const normalizedKeyword = keyword.toLowerCase();
     const userLat = Number.parseFloat(params.get("userLat"));
     const userLng = Number.parseFloat(params.get("userLng"));
     const hasUserCoords = Number.isFinite(userLat) && Number.isFinite(userLng);
 
-    const titleEl = document.getElementById("results-title");
+    const titleEl = document.getElementById("results-title")
     const subtitleEl = document.getElementById("results-subtitle");
     const centerNoteEl = document.getElementById("center-note");
     const mapFrame = document.getElementById("map-frame");
@@ -169,6 +170,94 @@
         { title: "Backend Trainee", company: "PrimeLedger", lat: 47.6124, lng: -122.3398, payK: 18, unpaid: false, skills: ["backend"], mode: "onsite", postedHours: 14 },
         { title: "Data Base Support", company: "CloudPort", lat: 47.6032, lng: -122.3303, payK: 28, unpaid: false, skills: ["database", "infra"], mode: "onsite", postedHours: 80 }
     ];
+
+    const radiusBands = [
+        { min: 0, max: 5 },
+        { min: 5, max: 10 },
+        { min: 10, max: 15 },
+        { min: 15, max: 20 },
+        { min: 20, max: 25 },
+        { min: 25, max: 30 },
+        { min: 30, max: 35 },
+        { min: 35, max: 40 },
+        { min: 40, max: 45 },
+        { min: 45, max: 50 }
+    ];
+
+    const sampleTitles = ["Frontend Developer", "Backend Developer", "DevOps Engineer", "Database Admin", "UI/UX Designer", "QA Tester", "Cloud Engineer", "Full Stack Developer", "Technical Writer", "Systems Analyst"];
+    const sampleCompanies = ["Skyline Labs", "NeonByte", "Vertex Systems", "Astra Solutions", "QuantumWorks", "NovaTech", "Pioneer Apps", "Summit Soft", "Infinite Loop", "DataCore"];
+
+    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+    const destinationFromDistance = (center, distanceKm, bearingDeg) => {
+        const earthRadius = 6371;
+        const br = toRad(bearingDeg);
+        const lat1 = toRad(center.lat);
+        const lng1 = toRad(center.lng);
+
+        const lat2 = Math.asin(
+            Math.sin(lat1) * Math.cos(distanceKm / earthRadius) +
+            Math.cos(lat1) * Math.sin(distanceKm / earthRadius) * Math.cos(br)
+        );
+
+        const lng2 = lng1 + Math.atan2(
+            Math.sin(br) * Math.sin(distanceKm / earthRadius) * Math.cos(lat1),
+            Math.cos(distanceKm / earthRadius) - Math.sin(lat1) * Math.sin(lat2)
+        );
+
+        return { lat: (lat2 * 180) / Math.PI, lng: (lng2 * 180) / Math.PI };
+    };
+
+    const createDummyJobs = (center) => {
+        const dummy = [];
+        const modes = ["remote", "hybrid", "onsite"];
+        const skillsOptions = [
+            ["frontend"],
+            ["backend"],
+            ["database"],
+            ["devops"],
+            ["aws"],
+            ["infra"]
+        ];
+        const payOptions = [
+            { unpaid: true, min: 0, max: 0 },
+            { unpaid: false, min: 10, max: 20 },
+            { unpaid: false, min: 20, max: 30 },
+            { unpaid: false, min: 30, max: 50 },
+            { unpaid: false, min: 50, max: 75 },
+            { unpaid: false, min: 75, max: 100 },
+            { unpaid: false, min: 100, max: 150 },
+            { unpaid: false, min: 150, max: 200 }
+        ];
+
+        radiusBands.forEach((band, bandIndex) => {
+            const centerDistance = (band.min + band.max) / 2;
+            modes.forEach((mode) => {
+                skillsOptions.forEach((skills) => {
+                    payOptions.forEach((payOpt) => {
+                        const bearing = (bandIndex * 37 + mode.length * 13 + skills[0].length * 7 + payOpt.min) % 360;
+                        const point = destinationFromDistance(center, centerDistance, bearing);
+                        const payK = payOpt.unpaid ? 0 : randomInt(payOpt.min, payOpt.max);
+                        const title = `${mode.charAt(0).toUpperCase() + mode.slice(1)} ${skills[0]} Specialist`;
+
+                        dummy.push({
+                            title,
+                            company: pick(sampleCompanies),
+                            lat: point.lat,
+                            lng: point.lng,
+                            payK,
+                            unpaid: payOpt.unpaid,
+                            skills,
+                            mode,
+                            postedHours: randomInt(2, 720)
+                        });
+                    });
+                });
+            });
+        });
+        return dummy;
+    };
 
     const toRad = (value) => (value * Math.PI) / 180;
     const distanceKm = (aLat, aLng, bLat, bLng) => {
@@ -203,6 +292,8 @@
         });
     };
 
+
+
     const parseRange = (value) => {
         const [min, max] = value.split("-").map(Number);
         return { min, max };
@@ -229,6 +320,11 @@
             .filter((job) => skillsFilter === "any" || job.skills.includes(skillsFilter))
             .filter((job) => modeFilter === "any" || job.mode === modeFilter)
             .filter((job) => dateFilterHours === null || job.postedHours <= dateFilterHours)
+            .filter((job) => {
+                if (!normalizedKeyword) return true;
+                const target = `${job.title} ${job.company} ${job.skills.join(" ")}`.toLowerCase();
+                return target.includes(normalizedKeyword);
+            })
             .sort((a, b) => a.distance - b.distance);
     };
 
@@ -280,17 +376,32 @@
         subtitleEl.textContent = "Showing openings based on your location radius.";
 
         let center;
-        if (hasUserCoords) {
+        const hasSelectedLocation = Boolean(selectedLocation);
+
+        if (hasSelectedLocation) {
+            try {
+                center = await geocodeLocation(selectedLocation);
+                centerNoteEl.textContent = `Using entered location (${selectedLocation}) as search center.`;
+                setMap(selectedLocation);
+            } catch (e) {
+                if (hasUserCoords) {
+                    center = { lat: userLat, lng: userLng };
+                    centerNoteEl.textContent = "Unable to geocode entered location; using browser geolocation as search center.";
+                    setMapByCoords(userLat, userLng);
+                } else {
+                    throw e;
+                }
+            }
+        } else if (hasUserCoords) {
             center = { lat: userLat, lng: userLng };
             centerNoteEl.textContent = "Using your browser geolocation as search center.";
             setMapByCoords(userLat, userLng);
         } else {
-            center = await geocodeLocation(selectedLocation);
-            centerNoteEl.textContent = "Geolocation unavailable, using entered location as search center.";
-            setMap(selectedLocation);
+            throw new Error("No location data available.");
         }
 
-        const nearby = jobs
+        const allJobs = jobs.concat(createDummyJobs(center));
+        const nearby = allJobs
             .map((job) => ({
                 ...job,
                 distance: distanceKm(center.lat, center.lng, job.lat, job.lng)
