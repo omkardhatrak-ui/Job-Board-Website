@@ -271,6 +271,20 @@
             color: #c62828;
         }
 
+        .application-summary {
+            margin-top: 14px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: #f4f8ff;
+            border: 1px solid #dbe7ff;
+            color: #0f172a;
+            line-height: 1.5;
+        }
+
+        .application-summary strong {
+            color: #1e63d5;
+        }
+
         /* ===== FOOTER ===== */
         footer {
             text-align: center;
@@ -354,6 +368,7 @@
 
         <button type="submit">Submit Application</button>
         <p id="form-response" class="form-response" aria-live="polite"></p>
+        <div id="application-summary" class="application-summary" hidden></div>
     </form>
 </div>
 
@@ -365,8 +380,44 @@
 <script>
     const form = document.getElementById("application-form");
     const response = document.getElementById("form-response");
+    const applicationSummary = document.getElementById("application-summary");
 
     const requiredFields = form.querySelectorAll(".field[required]");
+
+    // Constructor Function: creates an applicant object for each successful submission.
+    function ApplicantProfile(fullName, email, phone, desiredRole) {
+        this.fullName = fullName.trim();
+        this.email = email.trim();
+        this.phone = phone.trim();
+        this.desiredRole = desiredRole || "General Applicant";
+    }
+
+    ApplicantProfile.prototype.getProfileLine = function () {
+        return `${this.fullName} applied as ${this.desiredRole}.`;
+    };
+
+    // Default parameters: lets the UI still generate a clean summary when optional data is absent.
+    const buildApplicationSummary = (
+        applicantName = "Candidate",
+        desiredRole = "General Applicant",
+        coverLetterStatus = "No cover letter added",
+        linkedinStatus = "LinkedIn not shared"
+    ) => {
+        return `<strong>${applicantName}</strong> applied for <strong>${desiredRole}</strong>.<br>${coverLetterStatus}.<br>${linkedinStatus}.`;
+    };
+
+    // Closure Function: keeps track of how many valid applications were submitted in this session.
+    const createSubmissionTracker = () => {
+        let totalSubmissions = 0;
+
+        return () => {
+            totalSubmissions += 1;
+            return totalSubmissions;
+        };
+    };
+
+    const trackSubmission = createSubmissionTracker();
+
     const validators = {
         full_name: (value) => {
             if (!value.trim()) return "Full name is required.";
@@ -408,6 +459,17 @@
         }
     };
 
+    function setPanelMessage(message, isError = false) {
+        this.element.textContent = message;
+        this.element.classList.toggle("error", isError);
+        this.element.classList.add("show");
+    }
+
+    const clearPanelMessage = (element) => {
+        element.textContent = "";
+        element.classList.remove("show", "error");
+    };
+
     const setError = (name, message) => {
         const field = form.elements[name];
         const errorEl = document.getElementById(`error-${name}`);
@@ -437,13 +499,34 @@
         response.classList.remove("error");
 
         if (!validateAll()) {
-            response.textContent = "Please fix the highlighted fields.";
-            response.classList.add("show", "error");
+            setPanelMessage.call({ element: response }, "Please fix the highlighted fields.", true);
             return;
         }
 
-        response.textContent = "Thanks! Your application has been submitted.";
-        response.classList.add("show");
+        const applicant = new ApplicantProfile(
+            form.elements["full_name"].value,
+            form.elements["email"].value,
+            form.elements["phone"].value,
+            undefined
+        );
+        const submissionNumber = trackSubmission();
+        const coverLetterText = form.elements["cover_letter"].value.trim();
+        const linkedinText = form.elements["linkedin"].value.trim();
+        const summaryHtml = buildApplicationSummary(
+            applicant.fullName,
+            applicant.desiredRole,
+            coverLetterText ? "Cover letter added" : undefined,
+            linkedinText ? `LinkedIn shared: ${linkedinText}` : undefined
+        );
+
+        // call/apply/bind: reusing the same response updater for different message formats.
+        setPanelMessage.call(
+            { element: response },
+            `Thanks! Your application has been submitted. Submission #${submissionNumber}.`
+        );
+        applicationSummary.innerHTML = `${summaryHtml}<br>${applicant.getProfileLine()}`;
+        applicationSummary.hidden = false;
+
         form.reset();
         requiredFields.forEach((field) => field.classList.remove("invalid"));
         Object.keys(validators).forEach((name) => setError(name, ""));
@@ -460,6 +543,11 @@
             validateField(event.target.name);
         }
     }, true);
+
+    form.addEventListener("input", () => {
+        clearPanelMessage(response);
+        applicationSummary.hidden = true;
+    });
 </script>
 
 </body>
