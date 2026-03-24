@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JobFinder</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -62,8 +63,12 @@
         <p class="popular">
             Popular Searches: Marketing, Sales, IT, Finance, Design
         </p>
-    </div>
 
+        <div class="search-feedback">
+            <p id="search-status">Tip: Enter a job title, a city, or both to begin.</p>
+            <p id="search-count">Searches this session: 0</p>
+        </div>
+    </div>
 </section>
 
 <!-- ===== FEATURED JOBS ===== -->
@@ -74,7 +79,7 @@
         <div class="card">
             <h3>Software Engineer</h3>
             <p>at Tech Solutions</p>
-            <span>📍 New York, NY</span>
+            <span>Location: New York, NY</span>
             <div class="job-footer">
                 <span class="tag full">Full-Time</span>
                 <button class="btn small">Apply Now</button>
@@ -84,7 +89,7 @@
         <div class="card">
             <h3>Digital Marketing Manager</h3>
             <p>at Creative Agency</p>
-            <span>📍 Los Angeles, CA</span>
+            <span>Location: Los Angeles, CA</span>
             <div class="job-footer">
                 <span class="tag part">Part-Time</span>
                 <button class="btn small">Apply Now</button>
@@ -94,7 +99,7 @@
         <div class="card">
             <h3>Sales Executive</h3>
             <p>at Global Corp</p>
-            <span>📍 Chicago, IL</span>
+            <span>Location: Chicago, IL</span>
             <div class="job-footer">
                 <span class="tag full">Full-Time</span>
                 <button class="btn small">Apply Now</button>
@@ -104,7 +109,7 @@
         <div class="card">
             <h3>Product Designer</h3>
             <p>at Innovatech</p>
-            <span>📍 San Francisco, CA</span>
+            <span>Location: San Francisco, CA</span>
             <div class="job-footer">
                 <span class="tag part">Part-Time</span>
                 <button class="btn small">Apply Now</button>
@@ -148,21 +153,21 @@
             <img src="images/resume_img.webp" alt="">
             <h4>Resume Writing Tips</h4>
             <p>April 10, 2022</p>
-            <a href="#">Read More →</a>
+            <a href="#">Read More</a>
         </div>
 
         <div class="card">
             <img src="images/interview_img.jpg" alt="">
             <h4>How to Ace Your Interview</h4>
             <p>March 25, 2022</p>
-            <a href="#">Read More →</a>
+            <a href="#">Read More</a>
         </div>
 
         <div class="card">
             <img src="images/networking_img.jpg" alt="">
             <h4>Networking Strategies</h4>
             <p>March 15, 2022</p>
-            <a href="#">Read More →</a>
+            <a href="#">Read More</a>
         </div>
     </div>
 </section>
@@ -200,13 +205,53 @@
 </footer>
 
 <div class="copyright">
-    © 2026 JobFinder. All rights reserved.
+    &copy; 2026 JobFinder. All rights reserved.
 </div>
 
 <script>
     const searchForm = document.getElementById("job-search-form");
     const locationInput = document.getElementById("location-input");
     const keywordInput = document.getElementById("keyword-input");
+    const searchStatus = document.getElementById("search-status");
+    const searchCount = document.getElementById("search-count");
+
+    // Constructor Function: stores each search as a session object.
+    function SearchSession(keyword, location, searchMode) {
+        this.keyword = keyword || "All roles";
+        this.location = location || "Current location";
+        this.searchMode = searchMode || "Smart search";
+        this.createdAt = new Date();
+    }
+
+    SearchSession.prototype.describe = function () {
+        return `${this.keyword} jobs near ${this.location} using ${this.searchMode}`;
+    };
+
+    // Default parameters: builds a readable search summary even when values are missing.
+    const buildSearchSummary = (keyword = "All roles", location = "your area", searchMode = "Smart search") => {
+        return `${keyword} jobs near ${location} (${searchMode})`;
+    };
+
+    // Closure Function: remembers how many searches happened in the current session.
+    const createSearchTracker = () => {
+        let totalSearches = 0;
+
+        return (session) => {
+            totalSearches += 1;
+            searchCount.textContent = `Searches this session: ${totalSearches}`;
+            return `Latest search: ${session.describe()}`;
+        };
+    };
+
+    const trackSearch = createSearchTracker();
+
+    function updateSearchStatus(prefix, message) {
+        this.element.textContent = `${prefix}${message}`;
+    }
+
+    const searchStatusContext = { element: searchStatus };
+    const showSearchTip = updateSearchStatus.bind(searchStatusContext, "Tip: ");
+    showSearchTip("Enter a job title, a city, or both to begin.");
 
     const redirectToResults = (location, keyword, coords) => {
         const params = new URLSearchParams();
@@ -231,11 +276,24 @@
 
         const location = locationInput.value.trim();
         const keyword = keywordInput.value.trim();
+        const searchSession = new SearchSession(keyword, location, "Location and keyword search");
+        const latestSearch = trackSearch(searchSession);
+
+        // call/apply/bind: reuse one UI updater with different contexts/arguments.
+        updateSearchStatus.call(
+            searchStatusContext,
+            "Searching: ",
+            `${buildSearchSummary(searchSession.keyword, searchSession.location, searchSession.searchMode)}.`
+        );
 
         if (!navigator.geolocation) {
             if (location) {
                 redirectToResults(location, keyword, null);
             } else {
+                updateSearchStatus.apply(searchStatusContext, [
+                    "Tip: ",
+                    "Geolocation is unavailable, so please type a location to continue."
+                ]);
                 alert("Geolocation is unavailable. Please type a location to search jobs.");
                 locationInput.focus();
             }
@@ -244,6 +302,7 @@
 
         navigator.geolocation.getCurrentPosition(
             (position) => {
+                updateSearchStatus.apply(searchStatusContext, ["Searching: ", `${latestSearch}. Redirecting to nearby results.`]);
                 if (location || keyword) {
                     redirectToResults(location, keyword, position.coords);
                 } else {
@@ -252,10 +311,13 @@
             },
             () => {
                 if (location) {
+                    updateSearchStatus.call(searchStatusContext, "Searching: ", `${latestSearch}. Using the typed location only.`);
                     redirectToResults(location, keyword, null);
                 } else if (keyword) {
+                    updateSearchStatus.call(searchStatusContext, "Searching: ", `${latestSearch}. Keyword search will use default results.`);
                     redirectToResults("", keyword, null);
                 } else {
+                    updateSearchStatus.call(searchStatusContext, "Tip: ", "Allow location access or type a location to find jobs.");
                     alert("Unable to get your current location. Please enter a location manually.");
                     locationInput.focus();
                 }
@@ -266,6 +328,14 @@
                 maximumAge: 120000
             }
         );
+    });
+
+    keywordInput.addEventListener("focus", () => {
+        showSearchTip("Try roles like Frontend Developer, Backend Engineer, or DevOps Engineer.");
+    });
+
+    locationInput.addEventListener("focus", () => {
+        showSearchTip("You can type a city name if you do not want to use browser location.");
     });
 </script>
 
